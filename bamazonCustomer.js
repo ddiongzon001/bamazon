@@ -18,7 +18,6 @@ connection.connect(function (err) {
 
     //display all the products
     displayProducts();
-    // connection.end();
 })
 
 //display all the products
@@ -45,7 +44,11 @@ function asktoBuy() {
         message: "Please input the amount of product you want to purchase: ",
         name: "quantity",
     }]).then(function(answer){
-        console.log(`${answer.product_id}`);
-    })
-    // connection.end();
+        console.log(`You chose this item: ${answer.product_id} \nYou want to this many: ${answer.quantity}`);
+
+        //
+
+    });
+    
+    connection.end();
 }
