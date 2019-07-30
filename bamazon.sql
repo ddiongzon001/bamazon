@@ -11,7 +11,7 @@ CREATE TABLE products(
     PRIMARY KEY (item_id)
 );
 
-INSERT INTO product (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES("pokeball", "pokeball", "2.50", "1000"),
 	("great ball", "pokeball", "5.50", "500"),
 	("ultra ball", "pokeball", "7.50", "100"),
