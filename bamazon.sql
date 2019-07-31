@@ -22,3 +22,5 @@ VALUES("pokeball", "pokeball", "2.50", "1000"),
 	("hyper potion", "healing items", "6.50", "100"),
 	("max potion", "healing items", "9.00", "100"),
 	("revive", "healing items", "11.50", "100");
+    
+    SELECT product_name FROM products WHERE item_id = 1;

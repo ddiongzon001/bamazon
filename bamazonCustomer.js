@@ -44,11 +44,24 @@ function asktoBuy() {
         message: "Please input the amount of product you want to purchase: ",
         name: "quantity",
     }]).then(function(answer){
+    
         console.log(`You chose this item: ${answer.product_id} \nYou want to this many: ${answer.quantity}`);
 
-        //
+        // save the user responses in variables
+        let productID = answer.product_id;
+        let quantity = answer.quantity;
+
+        // save the stock quantity as a variable
+        connection.query("SELECT product_name FROM products WHERE ?", [{item_id: answer.product_id}], function(err, res){
+            if (err) throw err;
+            console.log(res);
+        });
+
+        // see if the user's quantity is greater than the stock quantity
+
+        
 
     });
     
-    connection.end();
+    // connection.end();
 }
