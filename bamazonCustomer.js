@@ -1,6 +1,7 @@
 // dependencies
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const formatCurrency = require('format-currency')
 require("console.table");
 
 // creates a connection to the mysql database
@@ -24,7 +25,7 @@ connection.connect(function (err) {
 //display all the products
 function displayProducts() {
     console.log(`WELCOME TO THE POKEMART!\n`)
-    connection.query("SELECT *, FORMAT(price,2) FROM products", function (err, res) {
+    connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity FROM products", function (err, res) {
         if (err) throw err;
         console.table(res);
 

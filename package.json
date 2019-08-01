@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ddiongzon001/bamazon#readme",
   "dependencies": {
     "console.table": "^0.10.0",
+    "format-currency": "^1.0.0",
     "inquirer": "^6.5.0",
     "mysql": "^2.17.1"
   }
