@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 // initial connection
 connection.connect(function (err) {
     if (err) throw err;
-    console.log(`connected as id ${connection.threadID} \n`);
+    console.log(`connected as id ${connection.threadID}`);
 
     //display all the products
     displayProducts();
@@ -24,7 +24,7 @@ connection.connect(function (err) {
 
 //display all the products
 function displayProducts() {
-    console.log(` ~~~~~~~~~~~~~~~~~ WELCOME TO THE POKEMART ~~~~~~~~~~~~~~~~~\n`)
+    console.log(`\n ~~~~~~~~~~~~~~~~~ WELCOME TO THE POKEMART ~~~~~~~~~~~~~~~~~\n`)
     connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity FROM products", function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -105,9 +105,9 @@ function checkProductID(numProducts, id) {
 function checkStock(userProductAmount, userProductName, userProductPrice, userProductStock, id, numProducts) {
 
     // if the user amount is greater than stock, prompt user of error
-    if (userProductAmount > userProductStock) {
+    if (userProductAmount > userProductStock || userProductAmount <= 0) {
         console.log(`\n**ATTENTION CUSTOMER**\nWe currently do not have enough product to fulfill your wants! Please purchase a lower amount. Sorry for any inconvience.\n`);
-        asktoBuy();
+        asktoBuy(numProducts);
     }
     // if the amount the user does buy is correct, confirm with user that is the product they want to buy
     else {
@@ -120,11 +120,10 @@ function checkStock(userProductAmount, userProductName, userProductPrice, userPr
 
             // If the user's answer is confirmed, run through the updateStock function that passes through the user's product ID & the current stock
             if (answer.orderConfirmed) {
-                updateStock(id, userProductStock, userProductAmount);
+                updateStock(id, userProductStock, userProductAmount, userProductPrice, userProductName);
             }
             // If the user did not confirm the item was correct, tell user and tell them to ask to buy again.
             else {
-                // console.log(`\n`);
                 asktoBuy(numProducts);
             }
         })
@@ -133,10 +132,44 @@ function checkStock(userProductAmount, userProductName, userProductPrice, userPr
 }
 
 // Updates the stock in mysql
-function updateStock(id, stock, purchased) {
+function updateStock(id, stock, purchased, price, productName) {
 
     //subtracts the purchase amount
-    let stock = stock - purchased;
+    let updatedStock = stock - purchased;
 
-    connection.query("UPDATE products SET")
+    connection.query("UPDATE products SET ? WHERE ?", [{
+        stock_quantity: updatedStock
+    },{
+        item_id: id
+    }], function(err, res){
+        if (err) throw err;
+
+        // Calculates the total order
+        let opts = { format: '%s%v', symbol: '$' }
+        let total = formatCurrency(price * purchased, opts);
+
+
+        // Display the order to the customer
+        console.log(`\n~~~~~~~~~~~~~~~~~ Your Order Has Been Purchased ~~~~~~~~~~~~~~~~~`)
+        console.log(`  ${productName} x${purchased} @ $${price} each                            ${total}`)
+        console.log(`=================================================================\n`)
+
+        //ask the customer if they want to buy another item
+        inquirer.prompt({
+            type: "confirm",
+            message: "Would you like to buy another item?",
+            name: "buyAgain"
+        }).then(function(answer){
+
+            // If they confirm they want another item display the products again
+            if (answer.buyAgain){
+                displayProducts();
+            }
+            // if they confirm they don't want to buy, end the connection
+            else
+            {
+                connection.end();
+            }
+        })
+    })
 }
