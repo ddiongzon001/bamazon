@@ -1,6 +1,7 @@
 // dependencies
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+require("console.table");
 
 // creates a connection to the mysql database
 const connection = mysql.createConnection({
@@ -22,7 +23,8 @@ connection.connect(function (err) {
 
 //display all the products
 function displayProducts() {
-    connection.query("SELECT * FROM products", function (err, res) {
+    console.log(`WELCOME TO THE POKEMART!\n`)
+    connection.query("SELECT *, FORMAT(price,2) FROM products", function (err, res) {
         if (err) throw err;
         console.table(res);
 
@@ -44,17 +46,29 @@ function asktoBuy() {
         message: "Please input the amount of product you want to purchase: ",
         name: "quantity",
     }]).then(function(answer){
-    
-        console.log(`You chose this item: ${answer.product_id} \nYou want to this many: ${answer.quantity}`);
 
         // save the user responses in variables
-        let productID = answer.product_id;
-        let quantity = answer.quantity;
+        let userProductID = answer.product_id;
+        let userProductAmount = answer.quantity;
 
-        // save the stock quantity as a variable
-        connection.query("SELECT product_name FROM products WHERE ?", [{item_id: answer.product_id}], function(err, res){
+        // get the user's product information from the database
+        connection.query("SELECT product_name, price, stock_quantity FROM products WHERE ?", [{item_id: userProductID}], function(err, res){
             if (err) throw err;
-            console.log(res);
+
+            // save the product information in different variables
+            let userProductName = res[0].product_name;
+            let userProductPrice = res[0].price;
+            let userProductStock = res[0].stock_quantity;
+            // console.log(res[0].product_name);
+            
+            // Check to see if the amount the user bought does not exceed the stock_quantity
+            if (userProductAmount > userProductStock){
+                console.log(`\n**ATTENTION CUSTOMER**\nWe currently do not have enough product to fulfill your wants! Please purchase a lower amount. Sorry for any inconvience.\n`);
+                asktoBuy();
+            } else{
+                console.log(`\nYou want to buy ${userProductAmount} ${userProductName} for ${userProductPrice} each.`);
+            }
+            
         });
 
         // see if the user's quantity is greater than the stock quantity
