@@ -24,7 +24,7 @@ connection.connect(function (err) {
 
 //display all the products
 function displayProducts() {
-    console.log(`WELCOME TO THE POKEMART!\n`)
+    console.log(` ~~~~~~~~~~~~~~~~~ WELCOME TO THE POKEMART ~~~~~~~~~~~~~~~~~\n`)
     connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity FROM products", function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -66,8 +66,26 @@ function asktoBuy() {
             if (userProductAmount > userProductStock){
                 console.log(`\n**ATTENTION CUSTOMER**\nWe currently do not have enough product to fulfill your wants! Please purchase a lower amount. Sorry for any inconvience.\n`);
                 asktoBuy();
-            } else{
-                console.log(`\nYou want to buy ${userProductAmount} ${userProductName} for ${userProductPrice} each.`);
+            } 
+            // if the amount the user does buy is correct, confirm with user that is the product they want to buy
+            else{
+                console.log(`\nYou want to buy ${userProductAmount} ${userProductName} for $${userProductPrice} each.`);
+                inquirer.prompt({
+                    type: "confirm",
+                    message: "Please confirm if the above information is true:",
+                    name: "orderConfirmed",
+                }).then(function(answer){
+                    
+                    // If the user's answer is confirmed, run through the updateStock function that passes through the user's product ID & the current stock
+                    if (answer.orderConfirmed){
+                        updateStock(userProductID, userProductStock, userProductAmount);
+                    }
+                    // If the user did not confirm the item was correct, tell user and tell them to ask to buy again.
+                    else{
+                        console.log("please pick the correct item");
+                        asktoBuy();
+                    }
+                })
             }
             
         });
@@ -79,4 +97,12 @@ function asktoBuy() {
     });
     
     // connection.end();
+}
+
+function updateStock(id, stock, purchased) {
+
+    //subtracts the purchase amount
+    let stock = stock - purchased;
+
+    connection.query("UPDATE products SET")
 }
