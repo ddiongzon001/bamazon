@@ -151,7 +151,7 @@ function updateStock(id, stock, purchased, price, productName) {
 
         // Display the order to the customer
         console.log(`\n~~~~~~~~~~~~~~~~~ Your Order Has Been Purchased ~~~~~~~~~~~~~~~~~`)
-        console.log(`  ${productName} x${purchased} @ $${price} each                            ${total}`)
+        console.log(`  ${productName} x${purchased} @ $${price} each                    ${total}`)
         console.log(`=================================================================\n`)
 
         //ask the customer if they want to buy another item
