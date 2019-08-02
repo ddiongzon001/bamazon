@@ -50,7 +50,7 @@ function initialDisplay() {
 function viewProducts(option) {
     console.log(`You selected: ${option}\n`);
 
-    let query = `SELECT departments.department_id, departments.department_name, IFNULL(SUM(products.product_sales),0) AS product_sales, (IFNULL(SUM(products.product_sales),0)-departments.over_head_costs) AS total_profit
+    let query = `SELECT departments.department_id, departments.department_name, IFNULL(SUM(products.product_sales),"0") AS product_sales, (IFNULL(SUM(products.product_sales),0)-departments.over_head_costs) AS total_profit
     FROM products
     RIGHT JOIN departments ON products.department_name = departments.department_name
     GROUP BY department_name;`
