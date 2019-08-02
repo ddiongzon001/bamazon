@@ -58,7 +58,7 @@ function viewProducts(option) {
     console.log(`\nYou selected: ${option}`);
     console.log(`\nThe following items are for sale:\n`)
 
-    let query = "SELECT item_id, product_name, RPAD(price,5,00) AS price, ISNULL(stock_quantity, '0') AS stock_quantity FROM products WHERE stock_quantity > 0";
+    let query = "SELECT item_id, product_name, RPAD(price,5,00) AS price, stock_quantity AS stock_quantity FROM products WHERE stock_quantity > 0";
     viewMysql(query);
 }
 
@@ -67,7 +67,7 @@ function viewLow(option) {
     console.log(`You selected: ${option}`);
     console.log(`\nThe following items have a stock quantity lower than 5:\n`)
 
-    let query = "SELECT item_id, product_name, RPAD(price,5,00) AS price, stock_quantity FROM products WHERE stock_quantity <= 5";
+    let query = "SELECT item_id, product_name, RPAD(price,5,00) AS price, stock_quantity FROM products WHERE stock_quantity < 5";
     viewMysql(query);
 }
 
@@ -77,12 +77,12 @@ function addInventory(option) {
 
     inquirer.prompt([{
             type: "input",
-            message: "Please choose the input the item id of the product you want to add inventory to: ",
+            message: "Please choose the input the item id of the product you want to add inventory to:",
             name: "id"
         },
         {
             type: "number",
-            message: "Please specify how much inventory you want to add to the stock: ",
+            message: "Please specify how much inventory you want to add to the stock:",
             name: "inventoryAdd"
         }
     ]).then(function (answers) {
