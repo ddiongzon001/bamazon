@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 // initial connection
 connection.connect(function (err) {
     if (err) throw err;
-    console.log(`\nconnected as id ${connection.threadID}`);
+    console.log(`\nHello customer! You are now connected as id: ${connection.threadId}`);
 
     //display all the products
     displayProducts();
@@ -45,12 +45,6 @@ function asktoBuy(numProducts) {
             message: "Please input the item id of the product you want to buy: ",
             name: "product_id",
         }
-        // },
-        // {
-        //     type: "input",
-        //     message: "Please input the amount of product you want to purchase: ",
-        //     name: "quantity",
-        // }
     ]).then(function (answer) {
 
         // save the user responses in variables
