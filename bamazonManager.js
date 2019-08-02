@@ -22,7 +22,7 @@ connection.connect(function (err) {
 
 //initial display
 function initialDisplay() {
-    console.log(`\n~~~~~~~~~~~~~~~~~~~~~~ POKEMART STORAGE ~~~~~~~~~~~~~~~~~~~~~~`)
+    console.log(`\n ~~~~~~~~~~~~~~~~~~~~~~ POKEMART STORAGE ~~~~~~~~~~~~~~~~~~~~~~\n`)
 
     //ask the manager which option they would want to use
     inquirer.prompt({
