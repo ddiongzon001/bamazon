@@ -73,7 +73,7 @@ function viewLow(option) {
 
 // Add to Inventory
 function addInventory(option) {
-    console.log(`You selected: ${option}`);
+    console.log(`You selected: ${option}\n`);
 
     inquirer.prompt([{
             type: "input",
@@ -86,7 +86,7 @@ function addInventory(option) {
             name: "inventoryAdd"
         }
     ]).then(function (answers) {
-        let selectquery = "SELECT stock_quantity FROM products WHERE ?"
+        let selectquery = `SELECT product_name, stock_quantity FROM products WHERE item_id = ${answers.id}`
         let updatequery = "UPDATE products SET ? WHERE ?";
         viewMysql(selectquery, updatequery, answers.id, answers.inventoryAdd);
     })
@@ -109,21 +109,27 @@ function viewMysql(selectquery, updatequery, id, addAmount) {
             selectAgain();
         } else {
             let stock = res[0].stock_quantity;
-            updateMysql(stock, updatequery, id, addAmount)
+            let name = res[0].product_name;
+            updateMysql(name, stock, updatequery, id, addAmount)
         }
 
     })
 }
 
 //function for adding things with connection.query
-function updateMysql(stock, query, id, addAmount) {
-    connection.query(query, [{
-        item_id: id
-    }, {
+function updateMysql(name, stock, query, id, addAmount) {
 
+    let newStock = parseFloat(stock) + parseFloat(addAmount);
+
+    connection.query(query, [{
+        stock_quantity: newStock
+    }, {
+        item_id: id
     }], function (err, res) {
         if (err) throw err;
-        console.log("You have added ")
+        console.log(`\nYou have added ${addAmount} ${name}s.`);
+        console.log(`You now have ${newStock} ${name}s in the storage room.\n`);
+        selectAgain();
     })
 }
 
