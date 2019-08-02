@@ -17,6 +17,11 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log(`connected as id ${connection.threadID}`);
 
+    initialDisplay();
+})
+
+//initial display
+function initialDisplay(){
     console.log(`\n~~~~~~~~~~~~~~~~~~~~~~ POKEMART STORAGE ~~~~~~~~~~~~~~~~~~~~~~`)
 
     //ask the manager which option they would want to use
@@ -27,8 +32,10 @@ connection.connect(function (err) {
         name: "selectedOption"
     }).then(function (answer) {
 
+        // store the option in a variable
         let option = answer.selectedOption;
 
+        // use the switch function to select which function to go into
         switch (option) {
             case "View Products for Sale":
                 viewProducts(option);
@@ -44,11 +51,15 @@ connection.connect(function (err) {
                 break;
         }
     })
-})
+}
 
 // View Products for Sale
 function viewProducts(option){
-    console.log(`You selected: ${option}`);
+    console.log(`\nYou selected: ${option}`);
+    console.log(`\nThe following items are for sale:\n`)
+
+    let query = "SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity > 0";
+    viewMysql(query);
 }
 
 // View Low Inventory
@@ -64,4 +75,29 @@ function addInventory(option){
 // Add New Product
 function addNew(option){
     console.log(`You selected: ${option}`);
+}
+
+// function for the connection.query
+function viewMysql(query) {
+    connection.query(query,function(err,res){
+        if (err) throw err;
+        console.table(res);
+        selectAgain();
+    })
+}
+
+// function to ask they user if they would like to select again
+function selectAgain(){
+    inquirer.prompt({
+        type: "confirm",
+        message: "Would you like to select another option?",
+        name: "again"
+    }).then(function(answer){
+        if(answer.again){
+            initialDisplay();
+        }
+        else{
+            connection.end();
+        }
+    })
 }
