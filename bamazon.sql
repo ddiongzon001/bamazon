@@ -48,7 +48,7 @@ VALUES("pokeball", 50),
 -- WHERE products.department_name = departments.department_name
 -- GROUP BY products.department_name;
 
-SELECT departments.department_id, departments.department_name, IFNULL(SUM(products.product_sales),0) AS product_sales, (IFNULL(SUM(products.product_sales),0)-departments.over_head_costs) AS total_profit
-FROM products
-RIGHT JOIN departments ON products.department_name = departments.department_name
-GROUP BY department_name;
+-- SELECT departments.department_id, departments.department_name, departments.over_head_costs, IFNULL(SUM(products.product_sales),0) AS product_sales, (IFNULL(SUM(products.product_sales),0)-departments.over_head_costs) AS total_profit
+-- FROM products
+-- RIGHT JOIN departments ON products.department_name = departments.department_name
+-- GROUP BY department_name;
