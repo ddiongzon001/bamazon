@@ -25,5 +25,43 @@ connection.connect(function (err) {
         message: "Please choose from the following options:",
         choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"],
         name: "selectedOption"
+    }).then(function (answer) {
+
+        let option = answer.selectedOption;
+
+        switch (option) {
+            case "View Products for Sale":
+                viewProducts(option);
+                break;
+            case "View Low Inventory":
+                viewLow(option);
+                break;
+            case "Add to Inventory":
+                addInventory(option);
+                break;
+            default:
+                addNew(option);;
+                break;
+        }
     })
 })
+
+// View Products for Sale
+function viewProducts(option){
+    console.log(`You selected: ${option}`);
+}
+
+// View Low Inventory
+function viewLow(option){
+    console.log(`You selected: ${option}`);
+}
+
+// Add to Inventory
+function addInventory(option){
+    console.log(`You selected: ${option}`);
+}
+
+// Add New Product
+function addNew(option){
+    console.log(`You selected: ${option}`);
+}
