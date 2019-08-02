@@ -65,6 +65,10 @@ function viewProducts(option){
 // View Low Inventory
 function viewLow(option){
     console.log(`You selected: ${option}`);
+    console.log(`\nThe following items have a stock quantity of 5 or lower:\n`)
+
+    let query = "SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity <= 5";
+    viewMysql(query);
 }
 
 // Add to Inventory
