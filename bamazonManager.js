@@ -21,7 +21,7 @@ connection.connect(function (err) {
 })
 
 //initial display
-function initialDisplay(){
+function initialDisplay() {
     console.log(`\n~~~~~~~~~~~~~~~~~~~~~~ POKEMART STORAGE ~~~~~~~~~~~~~~~~~~~~~~`)
 
     //ask the manager which option they would want to use
@@ -54,7 +54,7 @@ function initialDisplay(){
 }
 
 // View Products for Sale
-function viewProducts(option){
+function viewProducts(option) {
     console.log(`\nYou selected: ${option}`);
     console.log(`\nThe following items are for sale:\n`)
 
@@ -63,44 +63,81 @@ function viewProducts(option){
 }
 
 // View Low Inventory
-function viewLow(option){
+function viewLow(option) {
     console.log(`You selected: ${option}`);
-    console.log(`\nThe following items have a stock quantity of 5 or lower:\n`)
+    console.log(`\nThe following items have a stock quantity lower than 5:\n`)
 
     let query = "SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity <= 5";
     viewMysql(query);
 }
 
 // Add to Inventory
-function addInventory(option){
+function addInventory(option) {
     console.log(`You selected: ${option}`);
+
+    inquirer.prompt([{
+            type: "input",
+            message: "Please choose the input the item id of the product you want to add inventory to: ",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "Please specify how much inventory you want to add to the stock: ",
+            name: "inventoryAdd"
+        }
+    ]).then(function (answers) {
+        let selectquery = "SELECT stock_quantity FROM products WHERE ?"
+        let updatequery = "UPDATE products SET ? WHERE ?";
+        viewMysql(selectquery, updatequery, answers.id, answers.inventoryAdd);
+    })
+
 }
 
 // Add New Product
-function addNew(option){
+function addNew(option) {
     console.log(`You selected: ${option}`);
 }
 
-// function for the connection.query
-function viewMysql(query) {
-    connection.query(query,function(err,res){
+// function for the viewing tables with connection.query
+function viewMysql(selectquery, updatequery, id, addAmount) {
+
+    connection.query(selectquery, function (err, res) {
         if (err) throw err;
-        console.table(res);
-        selectAgain();
+
+        if (!updatequery) {
+            console.table(res);
+            selectAgain();
+        } else {
+            let stock = res[0].stock_quantity;
+            updateMysql(stock, updatequery, id, addAmount)
+        }
+
+    })
+}
+
+//function for adding things with connection.query
+function updateMysql(stock, query, id, addAmount) {
+    connection.query(query, [{
+        item_id: id
+    }, {
+
+    }], function (err, res) {
+        if (err) throw err;
+        console.log("You have added ")
     })
 }
 
 // function to ask they user if they would like to select again
-function selectAgain(){
+function selectAgain() {
     inquirer.prompt({
         type: "confirm",
         message: "Would you like to select another option?",
         name: "again"
-    }).then(function(answer){
-        if(answer.again){
+    }).then(function (answer) {
+        if (answer.again) {
             initialDisplay();
-        }
-        else{
+        } else {
+            console.log("Have a good day!");
             connection.end();
         }
     })

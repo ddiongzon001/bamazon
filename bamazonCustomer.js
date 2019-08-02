@@ -168,6 +168,7 @@ function updateStock(id, stock, purchased, price, productName) {
             // if they confirm they don't want to buy, end the connection
             else
             {
+                console.log("Thank you for shopping at our PokeMart! Enjoy your day.");
                 connection.end();
             }
         })
