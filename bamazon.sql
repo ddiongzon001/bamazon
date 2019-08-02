@@ -18,11 +18,11 @@ VALUES("pokeball", "pokeball", 2.50, 1000, 0),
 	("ultra ball", "pokeball", 7.50, 100, 0),
 	("master ball", "pokeball", 10.00, 1, 0),
 	("premier ball", "pokeball", 25.00, 100, 0),
-    ("potion", "healing items", 1.50, 100, 0),
-	("super potion", "healing items", 5.00, 100, 0),
-	("hyper potion", "healing items", 6.50, 100, 0),
-	("max potion", "healing items", 9.00, 100, 0),
-	("revive", "healing items", 11.50, 3, 0);
+    ("potion", "healing item", 1.50, 100, 0),
+	("super potion", "healing item", 5.00, 100, 0),
+	("hyper potion", "healing item", 6.50, 100, 0),
+	("max potion", "healing item", 9.00, 100, 0),
+	("revive", "healing item", 11.50, 3, 0);
     
 
 ALTER TABLE products
@@ -33,4 +33,16 @@ CREATE TABLE departments (
 	department_name VARCHAR(50) NOT NULL,
 	over_head_costs INT,
 	PRIMARY KEY (department_id)
-)
+);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES("pokeball", 50),
+	("healing item", 75);
+
+-- select department_name, stock_quantity, product_sales from products GROUP BY department_name;
+-- select * from departments;
+
+-- SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (SUM(products.product_sales)-departments.over_head_costs) AS total_profit
+-- FROM products, departments
+-- WHERE products.department_name = departments.department_name
+-- GROUP BY products.department_name;

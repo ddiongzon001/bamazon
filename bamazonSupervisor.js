@@ -46,3 +46,39 @@ function initialDisplay() {
         }
     })
 }
+
+function viewProducts(option) {
+    console.log(`You selected: ${option}\n`);
+
+    let query = `SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (SUM(products.product_sales)-departments.over_head_costs) AS total_profit
+    FROM products, departments
+    WHERE products.department_name = departments.department_name
+    GROUP BY products.department_name;`
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        selectAgain();
+    })
+
+}
+
+function addNew(option) {
+    console.log(`You selected: ${option}\n`);
+
+}
+
+// function to ask they user if they would like to select again
+function selectAgain() {
+    inquirer.prompt({
+        type: "confirm",
+        message: "Would you like to select another option?",
+        name: "again"
+    }).then(function (answer) {
+        if (answer.again) {
+            initialDisplay();
+        } else {
+            console.log("Have a good day!");
+            connection.end();
+        }
+    })
+}
