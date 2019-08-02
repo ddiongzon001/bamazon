@@ -25,7 +25,7 @@ connection.connect(function (err) {
 //display all the products
 function displayProducts() {
     console.log(`\n ~~~~~~~~~~~~~~~~~ WELCOME TO THE POKEMART ~~~~~~~~~~~~~~~~~\n`)
-    connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity FROM products", function (err, res) {
+    connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity, product_sales FROM products", function (err, res) {
         if (err) throw err;
         console.table(res);
 
@@ -136,9 +136,11 @@ function updateStock(id, stock, purchased, price, productName) {
 
     //subtracts the purchase amount
     let updatedStock = stock - purchased;
+    let total = price * purchased;
 
     connection.query("UPDATE products SET ? WHERE ?", [{
-        stock_quantity: updatedStock
+        stock_quantity: updatedStock,
+        product_sales: total
     },{
         item_id: id
     }], function(err, res){
@@ -146,7 +148,8 @@ function updateStock(id, stock, purchased, price, productName) {
 
         // Calculates the total order
         let opts = { format: '%s%v', symbol: '$' }
-        let total = formatCurrency(price * purchased, opts);
+        total = formatCurrency(price * purchased, opts);
+
 
 
         // Display the order to the customer

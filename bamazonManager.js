@@ -58,7 +58,7 @@ function viewProducts(option) {
     console.log(`\nYou selected: ${option}`);
     console.log(`\nThe following items are for sale:\n`)
 
-    let query = "SELECT item_id, product_name, RPAD(price,5,00) AS price, stock_quantity FROM products WHERE stock_quantity > 0";
+    let query = "SELECT item_id, product_name, RPAD(price,5,00) AS price, ISNULL(stock_quantity, '0') AS stock_quantity FROM products WHERE stock_quantity > 0";
     viewMysql(query);
 }
 
