@@ -25,7 +25,7 @@ connection.connect(function (err) {
 
 //display all the products
 function displayProducts() {
-    connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity, product_sales FROM products", function (err, res) {
+    connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity FROM products", function (err, res) {
         if (err) throw err;
         console.table(res);
 

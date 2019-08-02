@@ -8,7 +8,7 @@ CREATE TABLE products(
     department_name VARCHAR(50) NOT NULL,
     price DECIMAL(4,2) NOT NULL,
     stock_quantity INT NOT NULL,
-	product_sales INT,
+	product_sales DECIMAL (10,2) NOT NULL,
     PRIMARY KEY (item_id)
 );
 
@@ -31,7 +31,7 @@ MODIFY price DECIMAL(4,2) zerofill;
 CREATE TABLE departments (
 	department_id INT AUTO_INCREMENT NOT NULL,
 	department_name VARCHAR(50) NOT NULL,
-	over_head_costs INT,
+	over_head_costs DECIMAL (4,2),
 	PRIMARY KEY (department_id)
 );
 
@@ -39,6 +39,9 @@ INSERT INTO departments (department_name, over_head_costs)
 VALUES("pokeball", 50),
 	("healing item", 75),
     ("berry", 15);
+    
+ALTER TABLE departments
+MODIFY over_head_costs DECIMAL(4,2) zerofill;
 
 -- select department_name, stock_quantity, product_sales from products GROUP BY department_name;
 -- select * from departments;
