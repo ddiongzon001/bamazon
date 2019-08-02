@@ -37,7 +37,8 @@ CREATE TABLE departments (
 
 INSERT INTO departments (department_name, over_head_costs)
 VALUES("pokeball", 50),
-	("healing item", 75);
+	("healing item", 75),
+    ("berry", 15);
 
 -- select department_name, stock_quantity, product_sales from products GROUP BY department_name;
 -- select * from departments;
@@ -46,3 +47,8 @@ VALUES("pokeball", 50),
 -- FROM products, departments
 -- WHERE products.department_name = departments.department_name
 -- GROUP BY products.department_name;
+
+SELECT departments.department_id, departments.department_name, IFNULL(SUM(products.product_sales),0) AS product_sales, (IFNULL(SUM(products.product_sales),0)-departments.over_head_costs) AS total_profit
+FROM products
+RIGHT JOIN departments ON products.department_name = departments.department_name
+GROUP BY department_name;

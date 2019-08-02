@@ -16,13 +16,13 @@ const connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log(`\nHello Supervisor! You are now connected as id: ${connection.threadId}`);
+    console.log(`\n ~~~~~~~~~~~~~~~~~~~~~~ POKEMART COST ANALYSIS ~~~~~~~~~~~~~~~~~~~~~~\n`)
 
     initialDisplay();
 })
 
 //initial display
 function initialDisplay() {
-    console.log(`\n ~~~~~~~~~~~~~~~~~~~~~~ POKEMART COST ANALYSIS ~~~~~~~~~~~~~~~~~~~~~~\n`)
 
     //ask the supervisor which option they would want to use
     inquirer.prompt({
@@ -50,10 +50,10 @@ function initialDisplay() {
 function viewProducts(option) {
     console.log(`You selected: ${option}\n`);
 
-    let query = `SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (SUM(products.product_sales)-departments.over_head_costs) AS total_profit
-    FROM products, departments
-    WHERE products.department_name = departments.department_name
-    GROUP BY products.department_name;`
+    let query = `SELECT departments.department_id, departments.department_name, IFNULL(SUM(products.product_sales),0) AS product_sales, (IFNULL(SUM(products.product_sales),0)-departments.over_head_costs) AS total_profit
+    FROM products
+    RIGHT JOIN departments ON products.department_name = departments.department_name
+    GROUP BY department_name;`
     connection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -64,6 +64,28 @@ function viewProducts(option) {
 
 function addNew(option) {
     console.log(`You selected: ${option}\n`);
+
+    inquirer.prompt([{
+        type: "input",
+        message: "Please input the name of the new department you would like to add:",
+        name: "name"
+    },
+    {
+        type: "number",
+        message: "Please include what the initial over head cost of the department is:",
+        name: "cost"
+    }
+]).then(function (answers) {
+    let query = `INSERT INTO departments (department_name, over_head_costs) 
+        VALUE ("${answers.name}", ${answers.cost})`;
+    
+    connection.query(query, function(err, res){
+        if (err) throw err;
+        console.log("\nYou have added a new department to the Pokemart!\n");
+        selectAgain();
+    })
+
+})
 
 }
 

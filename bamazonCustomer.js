@@ -17,6 +17,7 @@ const connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log(`\nHello customer! You are now connected as id: ${connection.threadId}`);
+    console.log(`\n ~~~~~~~~~~~~~~~~~ POKEMART STOREFRONT ~~~~~~~~~~~~~~~~~\n`)
 
     //display all the products
     displayProducts();
@@ -24,7 +25,6 @@ connection.connect(function (err) {
 
 //display all the products
 function displayProducts() {
-    console.log(`\n ~~~~~~~~~~~~~~~~~ POKEMART STOREFRONT ~~~~~~~~~~~~~~~~~\n`)
     connection.query("SELECT item_id, product_name, department_name, RPAD(price,5,00) AS price, stock_quantity, product_sales FROM products", function (err, res) {
         if (err) throw err;
         console.table(res);

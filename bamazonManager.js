@@ -16,13 +16,13 @@ const connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log(`\nHello Manager! You are now connected as id: ${connection.threadId}`);
+    console.log(`\n ~~~~~~~~~~~~~~~~~~~~~~ POKEMART STORAGE ~~~~~~~~~~~~~~~~~~~~~~\n`)
 
     initialDisplay();
 })
 
 //initial display
 function initialDisplay() {
-    console.log(`\n ~~~~~~~~~~~~~~~~~~~~~~ POKEMART STORAGE ~~~~~~~~~~~~~~~~~~~~~~\n`)
 
     //ask the manager which option they would want to use
     inquirer.prompt({
